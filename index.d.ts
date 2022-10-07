@@ -17,4 +17,7 @@ interface TransformOptions {
   };
 }
 
-export function transform(options: TransformOptions): number;
+export function transform (options: TransformOptions): number;
+
+export function process<T> (
+  styles: T, win: { width: number; height: number }): T;

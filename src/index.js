@@ -99,7 +99,7 @@ export const transform = ({ prop, value, win, parent, font }) => {
       ) {
         throw new Error(
           CSS_CALC +
-            "white space is required on both sides of the + and - operators."
+          "white space is required on both sides of the + and - operators."
         );
       }
     }
@@ -110,10 +110,9 @@ export const transform = ({ prop, value, win, parent, font }) => {
 
   const matches = formula.match(MATH_EXP);
 
-  let currentFormula = formula
-    .trim()
-    .replace(MULTI_WHITESPACE, " ")
-    .replace(PIXEL, PLACEHOLDER);
+  let currentFormula = formula.trim().
+    replace(MULTI_WHITESPACE, " ").
+    replace(PIXEL, PLACEHOLDER);
 
   matches.forEach((match) => {
     let refValue;
@@ -126,7 +125,7 @@ export const transform = ({ prop, value, win, parent, font }) => {
         } else {
           throw new Error(
             CSS_CALC +
-              `you have to define parent.font.size when using the "%" unit with font-size.`
+            `you have to define parent.font.size when using the "%" unit with font-size.`
           );
         }
       } else {
@@ -152,7 +151,7 @@ export const transform = ({ prop, value, win, parent, font }) => {
         } else {
           throw new Error(
             CSS_CALC +
-              `you have to define parent.font.size when using the "em" unit with font-size.`
+            `you have to define parent.font.size when using the "em" unit with font-size.`
           );
         }
       } else if (font && typeof font.size === "number") {
@@ -197,10 +196,9 @@ export const transform = ({ prop, value, win, parent, font }) => {
     }
   }
 
-  const replacedFunctionsFormula = currentFormula
-    .toLowerCase()
-    .replace(MIX_MAX, MIN_MAX_REPLACEMENT)
-    .replace(CLAMP, CLAMP_REPLACEMENT);
+  const replacedFunctionsFormula = currentFormula.toLowerCase().
+    replace(MIX_MAX, MIN_MAX_REPLACEMENT).
+    replace(CLAMP, CLAMP_REPLACEMENT);
 
   const result = eval("(" + replacedFunctionsFormula + ")");
   const resultFloat = parseFloat(value.replace(calcPart, result));
@@ -209,4 +207,18 @@ export const transform = ({ prop, value, win, parent, font }) => {
     return 0;
   }
   return resultFloat;
+};
+
+export const process = (styles, win) => {
+  const result = { ...styles };
+  Object.keys(result).forEach((prop) => {
+    const value = result[prop];
+    if (typeof value === "string") {
+      result[prop] = transform({ prop, value, win });
+    }
+    if (typeof value === "object") {
+      result[prop] = process(value, win);
+    }
+  });
+  return result;
 };

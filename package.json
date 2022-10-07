@@ -1,5 +1,5 @@
 {
-  "name": "css-calc-transform",
+  "name": "@gravitylabs/css-calc-transform",
   "version": "1.0.0",
   "description": "Transform CSS properties with calc() values to pixels based on window and element dimensions.",
   "main": "dist/index.js",

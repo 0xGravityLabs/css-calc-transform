@@ -1,4 +1,4 @@
-import { transform } from "../src/index.js";
+import { transform, process } from "../src/index.js";
 
 const win = {
   width: 480,
@@ -10,6 +10,35 @@ const parent = {
 };
 
 describe("CSS calc function", () => {
+  it("should support style object process", () => {
+    expect(
+      process({
+        fontSize: "calc(100vw - 10px)"
+      }, {
+        width: 100,
+        height: 200
+      })
+    ).toEqual({
+      fontSize: 90
+    });
+    expect(
+      process({
+        width: "calc(100vh - 10px)",
+        test: {
+          fontSize: "calc(100vw - 10px)"
+        }
+      }, {
+        width: 100,
+        height: 200
+      })
+    ).toEqual({
+      width: 190,
+      test: {
+        fontSize: 90
+      }
+    });
+  });
+
   it("should do nothing if there is no calc function", () => {
     expect(
       transform({
